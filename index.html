@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Learning Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+body{
+    background:#f1f5f9;
+}
+header{
+    background:#0f172a;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+section{
+    padding:30px;
+}
+.box{
+    background:white;
+    padding:20px;
+    margin:auto;
+    max-width:650px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+input,button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+}
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+button:hover{
+    background:#1d4ed8;
+}
+.hidden{
+    display:none;
+}
+video{
+    width:100%;
+    border-radius:10px;
+}
+.progress{
+    font-weight:bold;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Online Learning Platform</h1>
+<p>CODTECH Internship – Task 2</p>
+</header>
+
+<!-- LOGIN -->
+<section id="loginSection" class="box">
+<h2>Login</h2>
+<input type="text" placeholder="Username">
+<input type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</section>
+
+<!-- COURSE -->
+<section id="courseSection" class="box hidden">
+<h2>Course: Introduction to HTML</h2>
+
+<!-- HTML RELATED VIDEO -->
+<video controls>
+<source src="https://www.w3schools.com/html/html5.mp4" type="video/mp4">
+
+</video>
+
+<button onclick="startQuiz()">Start Quiz</button>
+</section>
+
+<!-- QUIZ -->
+<section id="quizSection" class="box hidden">
+<h2>HTML Quiz</h2>
+
+<p id="question"></p>
+
+<div id="options"></div>
+
+<p id="result"></p>
+<p class="progress">Progress: <span id="progress">0%</span></p>
+</section>
+
+<script>
+const quiz = [
+    {
+        q: "What does HTML stand for?",
+        options: [
+            "Hyper Text Markup Language",
+            "High Text Machine Language",
+            "Hyperlinks Text Mark Language"
+        ],
+        answer: 0
+    },
+    {
+        q: "Which tag is used to create a hyperlink?",
+        options: ["<a>", "<link>", "<href>"],
+        answer: 0
+    },
+    {
+        q: "Which tag is used for images?",
+        options: ["<img>", "<image>", "<src>"],
+        answer: 0
+    },
+    {
+        q: "HTML files have which extension?",
+        options: [".html", ".css", ".js"],
+        answer: 0
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function login(){
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("courseSection").classList.remove("hidden");
+}
+
+function startQuiz(){
+    document.getElementById("courseSection").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+    loadQuestion();
+}
+
+function loadQuestion(){
+    document.getElementById("result").innerText = "";
+    const q = quiz[currentQuestion];
+    document.getElementById("question").innerText = q.q;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(index);
+        optionsDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected){
+    if(selected === quiz[currentQuestion].answer){
+        score++;
+        document.getElementById("result").innerText = "Correct!";
+    } else {
+        document.getElementById("result").innerText = "Wrong!";
+    }
+
+    currentQuestion++;
+
+    document.getElementById("progress").innerText =
+        Math.round((currentQuestion / quiz.length) * 100) + "%";
+
+    if(currentQuestion < quiz.length){
+        setTimeout(loadQuestion, 800);
+    } else {
+        document.getElementById("question").innerText =
+            "Quiz Completed! Score: " + score + "/" + quiz.length;
+        document.getElementById("options").innerHTML = "";
+    }
+}
+</script>
+
+</body>
+</html>
